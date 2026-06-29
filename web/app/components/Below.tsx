@@ -50,7 +50,16 @@ export function RankingTable({
               <tr
                 key={c.grid_id}
                 className={`clickable${sel ? " sel" : ""}`}
+                tabIndex={0}
+                role="button"
+                aria-label={`${c.sea_area} 격자 선택`}
                 onClick={() => onSelectByGridId(c.grid_id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSelectByGridId(c.grid_id);
+                  }
+                }}
               >
                 <td>
                   <span className={`rk${c.rank <= 3 ? " hot" : ""}`}>{c.rank}</span>

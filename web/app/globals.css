@@ -1170,6 +1170,10 @@ button:focus-visible,
   outline: 2px solid var(--ind);
   outline-offset: 2px;
 }
+.t tbody tr.clickable:focus-visible {
+  outline: 2px solid var(--ind);
+  outline-offset: -2px;
+}
 @media (prefers-reduced-motion: reduce) {
   .rise,
   .grow,
@@ -1213,14 +1217,8 @@ button:focus-visible,
   font-size: 10.5px;
 }
 
-/* ── 반응형: 좁은 화면에서 패널을 지도 아래로 ── */
-@media (max-width: 1040px) {
-  .kpi {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .kpi .cell:nth-child(odd) {
-    border-right: 1px solid var(--line);
-  }
+/* ── 반응형: 중앙 타이틀 pill이 좌우 플로팅 패널과 겹치지 않도록 ~1180px부터 패널을 지도 아래로 ── */
+@media (max-width: 1180px) {
   .stage {
     height: auto;
     background: transparent;
@@ -1266,6 +1264,20 @@ button:focus-visible,
   }
   .stage .maplibregl-ctrl-bottom-left {
     left: 10px;
+  }
+}
+/* ── KPI·하단 패널을 2단으로, 통계 탐색을 세로로 ── */
+@media (max-width: 1040px) {
+  .kpi {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .kpi .cell:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+  /* 5칸을 2열에 넣으면 마지막 홀수 칸의 오른쪽 보더가 빈 칸을 향하므로 한 줄로 펼친다 */
+  .kpi .cell:nth-child(5) {
+    grid-column: 1 / -1;
+    border-right: 0;
   }
   .below {
     grid-template-columns: 1fr;

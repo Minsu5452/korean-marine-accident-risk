@@ -113,7 +113,7 @@ export default function MapView({
       const maplibregl: any = (await import("maplibre-gl")).default;
       if (cancelled || !containerRef.current) return;
 
-      const wide = window.innerWidth > 1040;
+      const wide = window.innerWidth > 1180;
       map = new maplibregl.Map({
         container: containerRef.current,
         style: STYLE_URL,
