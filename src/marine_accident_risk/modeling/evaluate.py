@@ -15,7 +15,9 @@ from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_s
 from sklearn.model_selection import GroupKFold
 
 
-def binary_metrics(y_true: Sequence[int], y_prob: Sequence[float]) -> dict[str, float]:
+def binary_metrics(
+    y_true: Sequence[int] | np.ndarray, y_prob: Sequence[float] | np.ndarray
+) -> dict[str, float]:
     """AUC, PR-AUC, Brier 점수."""
     yt = np.asarray(y_true, dtype=float)
     yp = np.asarray(y_prob, dtype=float)
@@ -49,7 +51,9 @@ def oof_predict(
 
 
 def threshold_table(
-    y_true: Sequence[int], y_prob: Sequence[float], thresholds: Sequence[float] | None = None
+    y_true: Sequence[int] | np.ndarray,
+    y_prob: Sequence[float] | np.ndarray,
+    thresholds: Sequence[float] | None = None,
 ) -> pd.DataFrame:
     """임계값별 precision·recall·f1·예측 양성 비율 표(순찰 알림 정책 검토용)."""
     yt = np.asarray(y_true, dtype=int)
