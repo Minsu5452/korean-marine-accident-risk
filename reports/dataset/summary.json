@@ -1,0 +1,30 @@
+{
+  "accidents_clean": 28935,
+  "weather_days": 2922,
+  "weather_hours": 70128,
+  "stations": 71,
+  "ratio": 3,
+  "by_resolution": {
+    "0.05": {
+      "positive_cells": 26011,
+      "negative_cells": 78033,
+      "with_weather": 52262,
+      "positive_with_weather": 13826,
+      "negative_with_weather": 38436
+    },
+    "0.1": {
+      "positive_cells": 25978,
+      "negative_cells": 77934,
+      "with_weather": 46946,
+      "positive_with_weather": 13996,
+      "negative_with_weather": 32950
+    },
+    "0.25": {
+      "positive_cells": 25902,
+      "negative_cells": 77706,
+      "with_weather": 40378,
+      "positive_with_weather": 14142,
+      "negative_with_weather": 26236
+    }
+  }
+}
