@@ -1,0 +1,1 @@
+{"period": "2018–2025", "accidents": 28935, "stations": 76, "resolutions": ["0.05", "0.1", "0.25"], "high_risk_def": "위험도 상위 10%", "high_risk_count": {"0.05": 287, "0.1": 108, "0.25": 23}}
