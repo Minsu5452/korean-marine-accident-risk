@@ -64,7 +64,7 @@ export function Hero() {
     <div className="head">
       <h1>연안 위험, 지도에서 바로 확인</h1>
       <p className="lead">
-        2018~2025년 전국 해양사고 기록과 연안 해양기상 관측을 결합해, 격자×시간 단위 위험도를 지도에
+        2018–2025년 전국 해양사고 기록과 연안 해양기상 관측을 결합해, 격자×시간 단위 위험도를 지도에
         펼쳐 보여줍니다. 격자를 고르면 위험을 끌어올린 기상 근거를 함께 확인할 수 있습니다. 해양경찰
         순찰 배치 검토를 가정한 화면입니다.
       </p>
@@ -100,9 +100,8 @@ export function Kpi({ meta, resolution }: { meta: Meta; resolution: Resolution }
     <div className="kpi">
       <div className="cell rise" style={{ animationDelay: ".02s" }}>
         <div className="lab">분석 기간</div>
-        <div className="big num">
-          {start}
-          <span className="u">–{end}</span>
+        <div className="big num rng">
+          {start}–{end}
         </div>
         <div className="sub">{span}개년 · 시 단위 매칭</div>
       </div>
@@ -134,10 +133,7 @@ export function Kpi({ meta, resolution }: { meta: Meta; resolution: Resolution }
       </div>
       <div className="cell rise" style={{ animationDelay: ".22s" }}>
         <div className="lab">격자 해상도</div>
-        <div className="big num">
-          {resNum.toFixed(2)}
-          <span className="u">°</span>
-        </div>
+        <div className="big num">{resNum.toFixed(2)}°</div>
         <div className="sub">≈{km} km · 0.05·0.25 전환</div>
       </div>
     </div>
@@ -176,7 +172,7 @@ export function Footer() {
           <br />
           기상 자료 <b>국립해양측위정보원(NMPNT)</b> 연안 관측 76개소
           <br />
-          분석 기간 2018 ~ 2025
+          분석 기간 2018–2025
         </div>
         <div className="disc">
           본 화면은 포트폴리오 데모이며 특정 기관의 실제 운영 서비스가 아닙니다. 지도·위험도·통계·순위는
