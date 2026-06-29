@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     cache_dir: Path = Path("data/cache")
     reports_dir: Path = Path("reports")
 
-    # 한국 EEZ 대략 bbox — 이 범위 밖 좌표는 이상치로 제거한다
+    # 한국 EEZ를 대략 감싸는 좌표 범위(bbox) — 이 범위 밖 좌표는 이상치로 제거한다
     eez_lat_min: float = 32.0
     eez_lat_max: float = 39.0
     eez_lon_min: float = 124.0
