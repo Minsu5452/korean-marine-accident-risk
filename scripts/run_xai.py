@@ -65,6 +65,7 @@ def main() -> None:
     # 더미 변수 함정 회피: 계절 one-hot 중 하나를 기준(baseline)으로 빼고 상수와 함께 적합.
     season_cols = [c for c in xs.columns if c.startswith("season_")]
     baseline = _label(season_cols[0]) if season_cols else "기준"
+    baseline_disp = baseline.split(":")[-1]  # '계절:가을' → '가을' (산문 표기용)
     xr = xs.drop(columns=season_cols[:1]) if season_cols else xs
 
     odds = []
@@ -106,8 +107,8 @@ def main() -> None:
     lines = [
         "# XAI — 위험을 끌어올리는 조건",
         "",
-        f"격자 {res}° 학습셋(표본 {len(y):,})에서 해석 모델의 표준화 오즈비와 순열 중요도를 냈습니다.",
-        f"오즈비는 변수 1 표준편차 증가당 사고 오즈 배수(>1이면 위험↑). 계절 오즈비는 {baseline} 대비.",
+        f"격자 {res}° 학습셋(표본 {len(y):,})에서 해석 모델의 표준화 오즈비와 순열 중요도를 구했습니다.",
+        f"오즈비는 변수 1 표준편차 증가당 사고 오즈 배수(>1이면 위험↑). 계절 오즈비는 {baseline_disp}을 기준으로 합니다.",
         "",
         "## 표준화 오즈비 (로지스틱)",
         "",
@@ -120,7 +121,7 @@ def main() -> None:
         reverse=True,
     )
     for o in ranked:
-        ci_txt = f"{o['ci_low']:.2f}~{o['ci_high']:.2f}" if o["ci_low"] is not None else "—"
+        ci_txt = f"{o['ci_low']:.2f}–{o['ci_high']:.2f}" if o["ci_low"] is not None else "—"
         p_txt = f"{o['pvalue']:.2e}" if o["pvalue"] is not None else "—"
         lines.append(f"| {o['feature']} | {o['odds_ratio']:.3f} | {ci_txt} | {p_txt} |")
     lines += ["", "## 순열 중요도 (AUC 하락폭)", "", "| 변수 | AUC 하락 |", "|---|---|"]

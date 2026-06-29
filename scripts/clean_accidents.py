@@ -26,8 +26,8 @@ def _render_md(report: CleaningReport) -> str:
         f"- 정제 후: {d['kept']:,}건\n"
         f"- 제거: {d['removed']:,}건 "
         f"(범위 밖 {d['removed_out_of_bbox']:,} · 결측 {d['removed_missing']:,})\n\n"
-        f"한국 EEZ 대략 bbox: 위도 {b['lat_min']}~{b['lat_max']}, "
-        f"경도 {b['lon_min']}~{b['lon_max']}\n\n"
+        f"한국 EEZ 좌표 범위(bbox): 위도 {b['lat_min']}–{b['lat_max']}, "
+        f"경도 {b['lon_min']}–{b['lon_max']}\n\n"
         "재현: `uv run python scripts/clean_accidents.py`\n"
     )
 
