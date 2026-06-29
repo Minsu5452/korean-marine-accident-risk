@@ -1,5 +1,6 @@
 # korean-marine-accident-risk
 
+[![Live Demo](https://img.shields.io/badge/라이브_데모-vercel-000000?logo=vercel&logoColor=white)](https://korean-marine-accident-risk.vercel.app)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-static_export-000000?logo=nextdotjs&logoColor=white)
 ![MapLibre](https://img.shields.io/badge/MapLibre-GL_JS-1E5CB3)
@@ -11,7 +12,7 @@
 
 ![대시보드](docs/diagrams/web-demo.png)
 
-> 위 화면은 실제 분석 실행 결과를 캡처한 정적 데모다. 표시 수치는 손으로 고치지 않았다.
+> 위 화면은 실제 분석 실행 결과를 캡처한 정적 데모다(표시 수치는 손으로 고치지 않았다). **라이브: [korean-marine-accident-risk.vercel.app](https://korean-marine-accident-risk.vercel.app)** — 키 없이 동작한다.
 
 ## 구현 범위
 
