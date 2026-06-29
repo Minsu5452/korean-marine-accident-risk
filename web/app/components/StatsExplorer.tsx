@@ -229,7 +229,7 @@ function ModelView({ xai, model }: { xai: XaiData; model: ModelData }) {
         <div className="meth">
           오즈비는 <b>로지스틱 회귀</b> 계수(사고=1)이며, 순열 중요도는 변수를 섞었을 때의{" "}
           <b>AUC 감소폭</b>입니다(클수록 기여 큼). 표본 {int(xai.n)}건 · {xai.resolution.toFixed(2)}°
-          기준. 단계별 위험 점수는 LightGBM, 근거 해석은 로지스틱 오즈비로 봅니다.
+          기준. 단계별 위험도 점수는 LightGBM, 근거 해석은 로지스틱 오즈비로 봅니다.
         </div>
       </div>
 

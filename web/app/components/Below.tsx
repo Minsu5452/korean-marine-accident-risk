@@ -38,7 +38,7 @@ export function RankingTable({
             <th>해역</th>
             <th>위험도</th>
             <th>주요 사고 유형</th>
-            <th className="r">최근접 관측소</th>
+            <th className="r">최근접 관측 지점</th>
           </tr>
         </thead>
         <tbody>

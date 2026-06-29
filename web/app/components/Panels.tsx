@@ -215,7 +215,7 @@ function DetailResult({ grid, detail }: { grid: GridCell; detail: CellDetail }) 
         <span className="v">{detail.sea_area}</span>
       </div>
       <div className="kv">
-        <span className="k">최근접 관측소까지</span>
+        <span className="k">최근접 관측 지점까지</span>
         <span className="v num">{detail.dist_km.toFixed(1)} km</span>
       </div>
       <div className="kv">

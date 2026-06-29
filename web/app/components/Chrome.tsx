@@ -111,7 +111,7 @@ export function Kpi({ meta, resolution }: { meta: Meta; resolution: Resolution }
           {int(meta.accidents)}
           <span className="u">건</span>
         </div>
-        <div className="sub">좌표 정제 후 · MTIS</div>
+        <div className="sub">좌표 정제 후 · MTIS 2017–2025</div>
       </div>
       <div className="cell rise" style={{ animationDelay: ".12s" }}>
         <div className="lab">관측 지점</div>
