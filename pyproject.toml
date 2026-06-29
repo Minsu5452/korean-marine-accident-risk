@@ -1,0 +1,42 @@
+[project]
+name = "korean-marine-accident-risk"
+version = "0.1.0"
+description = "한국 연안 해양사고 위험도 분석·예측"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "Minsu Kang", email = "daro980722@gmail.com" }]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "pyyaml>=6.0",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.2",
+]
+
+[project.urls]
+Repository = "https://github.com/Minsu5452/korean-marine-accident-risk"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.4", "mypy>=1.10"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/marine_accident_risk"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/marine_accident_risk", "scripts"]
+ignore_missing_imports = true   # pandas·yaml 등 서드파티 스텁 미설치 허용

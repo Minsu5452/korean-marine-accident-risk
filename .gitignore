@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.env
+.omc/
+.DS_Store
+# 데이터 원본·가공본·캐시는 커밋하지 않는다(README 데이터 준비 참고)
+data/raw/
+data/cache/
+data/*.xlsx
+data/*.xls
+data/*.parquet
+data/*.pkl
