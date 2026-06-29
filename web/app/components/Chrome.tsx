@@ -158,7 +158,7 @@ export function Footer() {
     <footer>
       <div className="wrap">
         <div className="fb">
-          <span className="logo" style={{ boxShadow: "none" }}>
+          <span className="logo">
             <WaveMark />
           </span>
           <span className="nm">

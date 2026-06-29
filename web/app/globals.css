@@ -12,8 +12,8 @@
   --ink: #1a1d24;
   --ink-2: #3c424c;
   --sub: #69707b;
-  --sub-2: #98a0ab;
-  --sub-3: #bcc2cb;
+  --sub-2: #767d89;
+  --sub-3: #8b929c;
   /* UI 강조: 인디고 */
   --ind: #4356c7;
   --ind-strong: #34429e;
@@ -98,7 +98,7 @@ header.top .wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(67, 86, 199, 0.35);
+  box-shadow: var(--sh-sm);
   flex: 0 0 34px;
 }
 .brand .nm {
@@ -659,7 +659,7 @@ header.top .wrap {
   transform-origin: left;
 }
 .cbar i.up {
-  background: linear-gradient(90deg, #f2a65a, #c8392b);
+  background: linear-gradient(90deg, var(--t2), var(--t4));
 }
 .cbar i.down {
   background: linear-gradient(90deg, #aeb7e8, #4356c7);
@@ -721,7 +721,10 @@ header.top .wrap {
 .legendchip .scale i {
   width: 16px;
   height: 10px;
+  /* 지도 격자(2px) 모서리와 같게 — 사각 셀 충실도 */
   border-radius: 2px;
+  /* 지도 셀 채움(0.62)과 같은 유효 투명도로 범례=지도 색을 맞춘다 */
+  opacity: 0.62;
   display: block;
 }
 .legendchip .selm {
@@ -1130,7 +1133,7 @@ footer .meta b {
 footer .disc {
   flex-basis: 100%;
   font-size: 12px;
-  color: var(--sub-3);
+  color: var(--sub);
   border-top: 1px solid var(--line);
   padding-top: 16px;
   line-height: 1.7;

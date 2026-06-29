@@ -172,7 +172,7 @@ export default function MapView({
               "case",
               ["boolean", ["feature-state", "selected"], false], 0.85,
               ["boolean", ["feature-state", "hover"], false], 0.72,
-              0.5,
+              0.62,
             ],
           },
         });
