@@ -69,7 +69,7 @@ npm run build                                                         # 정적 e
 
 ## 평가 / 검증
 
-표는 모두 `reports/` 산출물 한 곳에서 끌어옵니다.
+표는 모두 `reports/` 산출물 한 곳에서 끌어옵니다. 데이터 준비 단계 리포트도 같은 폴더에 두었습니다 — 좌표 정제 [`reports/clean/coordinate_cleaning.md`](reports/clean/coordinate_cleaning.md), 학습셋 구성 [`reports/dataset/summary.md`](reports/dataset/summary.md), 관측 지점 커버리지 [`reports/weather/station_coverage.md`](reports/weather/station_coverage.md).
 
 ### case-crossover (`reports/stats/case_crossover.md`)
 
@@ -93,7 +93,7 @@ npm run build                                                         # 정적 e
 
 ### XAI 핵심 (`reports/xai/odds_ratios.md`)
 
-야간에는 사고 오즈가 낮고(0.62×), 기온·기압이 높을수록 오즈가 올라가며(1.47×·1.28×), 풍속은 유의하지 않았습니다. 즉 이 데이터에서 사고는 *위험한 기상*보다 **활동 패턴**(주간·따뜻한 날·특정 해역)에 더 좌우됩니다 — 사고의 상당수가 기관손상·부유물 감김 같은 비기상 요인이라는 점과 일치합니다.
+야간에는 사고 오즈가 낮고(0.62×), 기온·기압이 높을수록 오즈가 올라가며(1.47×·1.28×), 풍속은 유의하지 않았습니다. 즉 이 데이터에서 사고는 *위험한 기상*보다 **활동 패턴**(주간·따뜻한 날·특정 해역)에 더 좌우됩니다.
 
 ## 프로젝트 구조
 
