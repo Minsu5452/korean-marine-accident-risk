@@ -64,24 +64,40 @@ export interface CellDetail {
 
 export type CellDetailMap = Record<string, CellDetail>;
 
-export interface StatResult {
+// 시간층화 case-crossover · 조건부 로지스틱 (1표준편차 증가당 오즈비)
+export interface OddsRatioStat {
   variable: string;
-  n_pairs: number;
-  test: string;
-  effect_size: number;
-  effect_name: string;
+  odds_ratio: number;
+  ci_low: number;
+  ci_high: number;
   pvalue: number;
-  q_value: number;
-  significant: boolean;
+  n_strata: number;
+  q_value?: number;
+  significant?: boolean;
+}
+
+export interface TypeGroup {
+  types: string[];
+  n_strata: number;
 }
 
 export interface StatsData {
-  accidents: number;
-  case_matched: number;
-  control_matched: number;
-  lag_days: number;
+  design: string;
+  referents: string;
+  n_strata: number;
+  mean_referents_per_case: number;
+  or_unit: string;
   fdr_alpha: number;
-  results: StatResult[];
+  overall_univariate: OddsRatioStat[];
+  overall_adjusted: OddsRatioStat[];
+  by_type_group: {
+    weather_sensitive: TypeGroup;
+    mechanical: TypeGroup;
+    odds_ratios: Record<
+      string,
+      { weather_sensitive: OddsRatioStat | null; mechanical: OddsRatioStat | null }
+    >;
+  };
 }
 
 export interface PermImportance {

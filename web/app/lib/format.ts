@@ -43,10 +43,6 @@ export function ci(lo: number, hi: number): string {
   return `[${lo.toFixed(2)}, ${hi.toFixed(2)}]`;
 }
 
-export function effect3(e: number): string {
-  return `${e >= 0 ? "+" : ""}${e.toFixed(3)}`;
-}
-
 // p값/q값 표기 (작은 값은 임계 표기)
 export function pval(p: number): string {
   if (p < 0.001) return "p<0.001";
@@ -73,6 +69,18 @@ export function sigLabel(q: number): string {
 
 export function casualty(n: number): string {
   return n > 0 ? `${n}명` : "—";
+}
+
+// 통계 변수 영문 키 → 화면 라벨
+const VAR_LABEL: Record<string, string> = {
+  wind_speed: "풍속",
+  air_temp: "기온",
+  air_pressure: "기압",
+  humidity: "습도",
+};
+
+export function varLabel(v: string): string {
+  return VAR_LABEL[v] ?? v;
 }
 
 // 0.10° 상세: 순위 기반 상위 백분위

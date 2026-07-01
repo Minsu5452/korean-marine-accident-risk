@@ -2,25 +2,8 @@
 
 import { useState } from "react";
 import type { ModelData } from "../lib/data";
-import type { StatResult, StatsData, XaiData } from "../lib/types";
-import {
-  ci,
-  effect3,
-  int,
-  or2,
-  pval,
-  qval,
-  sigClass,
-  sigLabel,
-} from "../lib/format";
-
-function magnitude(r: number): string {
-  const a = Math.abs(r);
-  if (a < 0.1) return "작음";
-  if (a < 0.3) return "중간";
-  if (a < 0.5) return "큼";
-  return "매우 큼";
-}
+import type { OddsRatioStat, StatsData, XaiData } from "../lib/types";
+import { ci, int, or2, pval, qval, sigClass, sigLabel, varLabel } from "../lib/format";
 
 export default function StatsExplorer({
   stats,
@@ -56,6 +39,11 @@ export default function StatsExplorer({
   );
 }
 
+function qShort(q?: number): string {
+  if (q == null) return "—";
+  return q < 0.001 ? "<0.001" : q.toFixed(3);
+}
+
 function CaseView({
   stats,
   varIdx,
@@ -65,51 +53,56 @@ function CaseView({
   varIdx: number;
   setVarIdx: (i: number) => void;
 }) {
-  const results = stats.results;
-  const cur = results[varIdx];
-  const maxAbs = Math.max(...results.map((r) => Math.abs(r.effect_size)), 1e-6);
+  const uni = stats.overall_univariate;
+  const cur = uni[varIdx] ?? uni[0];
+  const maxAbsLn = Math.max(...uni.map((r) => Math.abs(Math.log(r.odds_ratio))), 1e-6);
+  const grp = stats.by_type_group;
+  const nWeather = grp.weather_sensitive.n_strata;
+  const nMech = grp.mechanical.n_strata;
 
   return (
     <div className="sg">
       <div className="ctl">
         <div className="l">분석 변수</div>
         <div className="varlist">
-          {results.map((r, i) => (
+          {uni.map((r, i) => (
             <button
               key={r.variable}
               className={`varitem${i === varIdx ? " on" : ""}`}
               onClick={() => setVarIdx(i)}
             >
-              <span>{r.variable}</span>
-              <span className="vm num">{effect3(r.effect_size)}</span>
+              <span>{varLabel(r.variable)}</span>
+              <span className="vm num">{or2(r.odds_ratio)}×</span>
             </button>
           ))}
         </div>
         <div className="meth">
-          <b>case-crossover</b> · 같은 위치의 사고 시점과 {stats.lag_days}일 전 대조 시점을 짝지어
-          비교합니다. 정규성 검정 결과에 따라 검정을 자동 선택하며, 여기서는 Wilcoxon 부호순위 검정이
-          적용됐습니다. 다중 비교는 <b>FDR(BH) α={stats.fdr_alpha}</b>로 보정합니다. 사고{" "}
-          {int(stats.accidents)}건 기준.
+          <b>시간층화 case-crossover</b> · 사고가 난 시각을 같은 자리에서 <b>같은 달·같은 요일·같은
+          시각</b>의 다른 날들과 한 묶음으로 묶어, 조건부 로지스틱 회귀로 기상 1표준편차 증가당 사고
+          오즈비를 추정합니다. 위치·계절·요일·시각은 묶음이 통제합니다. 다중 비교는{" "}
+          <b>FDR(BH) α={stats.fdr_alpha}</b>로 보정합니다. 분석 묶음 {int(stats.n_strata)}건 · 사고당
+          평균 대조 {stats.mean_referents_per_case.toFixed(1)}건.
         </div>
       </div>
 
       <div className="view">
         <div className="summ">
-          <b>{cur.variable}</b> — 사고·대조 {int(cur.n_pairs)}쌍을 Wilcoxon 부호순위 검정으로
-          비교했습니다. 효과크기(rank-biserial) <b>{effect3(cur.effect_size)}</b> (|효과|{" "}
-          {magnitude(cur.effect_size)}), {pval(cur.pvalue)} · FDR 보정 {qval(cur.q_value)} →{" "}
-          <b>{cur.significant ? "통계적으로 유의" : "유의하지 않음"}</b>.
+          <b>{varLabel(cur.variable)}</b> — 1표준편차 오를 때 사고 오즈 <b>{or2(cur.odds_ratio)}×</b>{" "}
+          (95% CI {ci(cur.ci_low, cur.ci_high)}), {pval(cur.pvalue)} · FDR 보정{" "}
+          {qval(cur.q_value ?? 1)} →{" "}
+          <b>{cur.significant ? "통계적으로 유의" : "유의하지 않음"}</b>. 오즈비가 1보다 크면 값이
+          높을수록 사고 오즈가 커지고, 작으면 줄어듭니다.
         </div>
         <div className="charts">
           <div>
-            <h3>변수별 효과크기 (rank-biserial)</h3>
-            <div className="csub">0 기준 좌우 · 색이 진하면 FDR 보정 후 유의</div>
+            <h3>변수별 오즈비 (1표준편차 증가당)</h3>
+            <div className="csub">1.0 기준 좌우 · 오른쪽이 오즈 증가 · 색이 진하면 보정 후 유의</div>
             <div className="ebars">
-              {results.map((r, i) => (
-                <EffectBar
+              {uni.map((r, i) => (
+                <OrBar
                   key={r.variable}
                   r={r}
-                  maxAbs={maxAbs}
+                  maxAbsLn={maxAbsLn}
                   selected={i === varIdx}
                   onClick={() => setVarIdx(i)}
                 />
@@ -117,36 +110,70 @@ function CaseView({
             </div>
           </div>
           <div>
-            <h3>변수별 검정 결과</h3>
-            <div className="csub">쌍수 · 효과크기 · 보정 q값 · 유의성</div>
+            <h3>변수별 조건부 로지스틱 결과</h3>
+            <div className="csub">오즈비 · 95% CI · 보정 q값 · 유의성</div>
             <table className="stab">
               <thead>
                 <tr>
                   <th>변수</th>
-                  <th className="r">쌍수</th>
-                  <th className="r">효과크기</th>
+                  <th className="r">오즈비</th>
+                  <th className="r">95% CI</th>
                   <th className="r">q값</th>
                   <th className="r">유의성</th>
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, i) => (
+                {uni.map((r, i) => (
                   <tr key={r.variable} className={i === varIdx ? "sel" : ""}>
-                    <td>{r.variable}</td>
-                    <td className="r">{int(r.n_pairs)}</td>
-                    <td className="r">{effect3(r.effect_size)}</td>
-                    <td className="r">{r.q_value < 0.001 ? "<0.001" : r.q_value.toFixed(3)}</td>
+                    <td>{varLabel(r.variable)}</td>
                     <td className="r">
-                      <span className={`sig ${sigClass(r.q_value)}`}>{sigLabel(r.q_value)}</span>
+                      <b>{or2(r.odds_ratio)}×</b>
+                    </td>
+                    <td className="r">{ci(r.ci_low, r.ci_high)}</td>
+                    <td className="r">{qShort(r.q_value)}</td>
+                    <td className="r">
+                      <span className={`sig ${sigClass(r.q_value ?? 1)}`}>
+                        {sigLabel(r.q_value ?? 1)}
+                      </span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="note">
-              효과크기는 rank-biserial 상관입니다. 유의성은 다중 비교(FDR, Benjamini-Hochberg) 보정 후
-              q값 기준입니다.
-            </div>
+          </div>
+        </div>
+
+        <div className="grpcmp">
+          <h3>사고 유형군별 오즈비</h3>
+          <div className="csub">
+            기상 민감형(충돌·좌초·전복 등 {int(nWeather)}건) vs 기계·비기상형(기관손상·부유물감김 등{" "}
+            {int(nMech)}건)
+          </div>
+          <table className="stab">
+            <thead>
+              <tr>
+                <th>변수</th>
+                <th className="r">기상 민감형</th>
+                <th className="r">기계·비기상형</th>
+              </tr>
+            </thead>
+            <tbody>
+              {uni.map((r) => {
+                const g = grp.odds_ratios[r.variable];
+                return (
+                  <tr key={r.variable}>
+                    <td>{varLabel(r.variable)}</td>
+                    <OrGroupCell o={g?.weather_sensitive ?? null} />
+                    <OrGroupCell o={g?.mechanical ?? null} />
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className="note">
+            강한 기상 연관(풍속 오즈비 1 미만 · 기온 오즈비 1 초과)은 기계·비기상형 사고에 몰려
+            있습니다. 잔잔하고 따뜻한 날 선박이 더 많이 나가 조업하기 때문으로, 사고 시점 기상의
+            연관은 위험 신호라기보다 활동·노출 패턴의 흔적에 가깝습니다.
           </div>
         </div>
       </div>
@@ -154,31 +181,58 @@ function CaseView({
   );
 }
 
-function EffectBar({
+function OrGroupCell({ o }: { o: OddsRatioStat | null }) {
+  if (!o) {
+    return (
+      <td className="r" style={{ color: "var(--sub-3)" }}>
+        —
+      </td>
+    );
+  }
+  const sig = o.pvalue < 0.05;
+  return (
+    <td className="r">
+      <b style={{ color: sig ? "var(--ink)" : "var(--sub-2)" }}>{or2(o.odds_ratio)}×</b>
+      <div style={{ fontSize: "10px", color: "var(--sub-3)", fontWeight: 400 }}>
+        {ci(o.ci_low, o.ci_high)}
+        {sig ? "" : " · 유의하지 않음"}
+      </div>
+    </td>
+  );
+}
+
+function OrBar({
   r,
-  maxAbs,
+  maxAbsLn,
   selected,
   onClick,
 }: {
-  r: StatResult;
-  maxAbs: number;
+  r: OddsRatioStat;
+  maxAbsLn: number;
   selected: boolean;
   onClick: () => void;
 }) {
-  const w = (Math.abs(r.effect_size) / maxAbs) * 50;
-  const pos = r.effect_size >= 0;
-  const style = pos
-    ? { left: "50%", width: `${w}%` }
-    : { right: "50%", width: `${w}%` };
+  const ln = Math.log(r.odds_ratio);
+  const up = ln >= 0;
+  const w = (Math.abs(ln) / maxAbsLn) * 50;
+  const style = up ? { left: "50%", width: `${w}%` } : { right: "50%", width: `${w}%` };
   return (
     <button
       className={`ebar${r.significant ? " sig" : ""}${selected ? " sel" : ""}`}
       onClick={onClick}
-      style={{ border: 0, background: "transparent", padding: 0, cursor: "pointer", textAlign: "left", fontFamily: "inherit", width: "100%" }}
+      style={{
+        border: 0,
+        background: "transparent",
+        padding: 0,
+        cursor: "pointer",
+        textAlign: "left",
+        fontFamily: "inherit",
+        width: "100%",
+      }}
     >
       <div className="lab">
-        <span className="nm">{r.variable}</span>
-        <span className="num">{effect3(r.effect_size)}</span>
+        <span className="nm">{varLabel(r.variable)}</span>
+        <span className="num">{or2(r.odds_ratio)}×</span>
       </div>
       <div className="track">
         <span className="mid" />

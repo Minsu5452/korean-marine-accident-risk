@@ -999,6 +999,14 @@ table.t tr:last-child td {
   color: var(--sub-2);
   margin-bottom: 12px;
 }
+.stat .grpcmp {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.stat .grpcmp .note {
+  margin-top: 10px;
+}
 
 /* 효과크기 다이버징 바 */
 .ebars {

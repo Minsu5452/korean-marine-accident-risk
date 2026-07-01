@@ -76,7 +76,7 @@ export function Hero() {
           매칭 임계 <b>60 km · ±30분</b>
         </span>
         <span>
-          통계 <b>case-crossover · 정규성 기반 검정 선택</b>
+          통계 <b>시간층화 case-crossover · 조건부 로지스틱</b>
         </span>
       </div>
     </div>
